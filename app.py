@@ -10,19 +10,26 @@ CORS(app)
 def index():
     return render_template('index.html')  # Home page
 
-# Route for structured access like /Student/Index_json
+# Route for structured access like /Student/Index_json with filters
 @app.route("/Student/Index_json", methods=["GET"])
 def student_index():
     city = request.args.get('City')  # Retrieve 'City' query parameter
+    gender = request.args.get('Gender')  # Retrieve 'Gender' query parameter
+    
     with open('students.json') as f:
         data = json.load(f)  # Load students data from JSON
 
-    if city:
-        # Filter data based on the 'City' parameter
+    # Apply filters based on City and Gender parameters
+    if city and gender:
+        filtered_data = [x for x in data if x['City'].lower() == city.lower() and x['Gender'].lower() == gender.lower()]
+    elif city:
         filtered_data = [x for x in data if x['City'].lower() == city.lower()]
-        return jsonify(filtered_data), 200
+    elif gender:
+        filtered_data = [x for x in data if x['Gender'].lower() == gender.lower()]
     else:
-        return jsonify(data), 200  # If no city parameter, return all data
+        filtered_data = data  # If no filters are applied, return all data
+
+    return jsonify(filtered_data), 200
 
 if __name__ == "__main__":
     app.run(debug=True)
