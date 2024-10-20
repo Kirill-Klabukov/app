@@ -8,11 +8,11 @@ CORS(app)
 # Route for rendering the homepage
 @app.route('/')
 def index():
-    return render_template('index.html')  # This will render a simple HTML page
+    return render_template('index.html')  # Home page
 
-# Route for filtering students
-@app.route("/Students", methods=["GET"])
-def main():
+# Route for structured access like /Student/Index_json
+@app.route("/Student/Index_json", methods=["GET"])
+def student_index():
     city = request.args.get('City')  # Retrieve 'City' query parameter
     with open('students.json') as f:
         data = json.load(f)  # Load students data from JSON
