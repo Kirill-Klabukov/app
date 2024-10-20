@@ -1,19 +1,21 @@
-
-from flask import Flask
-from flask import request
-from flask import jsonify
+from flask import Flask, request, jsonify, render_template
 import json
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
+# Route for rendering the homepage
+@app.route('/')
+def index():
+    return render_template('index.html')  # This will render a simple HTML page
+
+# Route for filtering students
 @app.route("/Students", methods=["GET"])
 def main():
     city = request.args.get('City')  # Retrieve 'City' query parameter
-    f = open('students.json')
-    data = json.load(f)  # Load students data from JSON
-    f.close()
+    with open('students.json') as f:
+        data = json.load(f)  # Load students data from JSON
 
     if city:
         # Filter data based on the 'City' parameter
@@ -23,4 +25,4 @@ def main():
         return jsonify(data), 200  # If no city parameter, return all data
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
