@@ -3,7 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask App with Filters</title>
+    <title>Student Filter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .filter-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .filter-group label {
+            margin-right: 10px;
+        }
+        .filter-group input,
+        .filter-group select {
+            padding: 8px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 100%;
+            margin-right: 10px;
+        }
+        .filter-group button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .filter-group button:hover {
+            background-color: #45a049;
+        }
+        #results {
+            margin-top: 20px;
+        }
+        .student {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+    </style>
     <script>
         // JavaScript function to send AJAX request to Flask backend
         function applyFilters() {
@@ -16,35 +79,42 @@
                 .then(data => {
                     let resultDiv = document.getElementById('results');
                     resultDiv.innerHTML = ''; // Clear previous results
-                    data.forEach(student => {
-                        resultDiv.innerHTML += `<p>${student.Name} - ${student.City} - ${student.Gender}</p>`;
-                    });
+                    if (data.length > 0) {
+                        data.forEach(student => {
+                            resultDiv.innerHTML += `
+                                <div class="student">
+                                    <strong>${student.Name}</strong><br>
+                                    ${student.City}, ${student.Gender}
+                                </div>`;
+                        });
+                    } else {
+                        resultDiv.innerHTML = '<p>No students found.</p>';
+                    }
                 });
         }
     </script>
 </head>
 <body>
-    <h1>Welcome to My Flask App!</h1>
-    <p>This is a simple demonstration of Flask with filtering functionality.</p>
-    
-    <!-- Filter Form -->
-    <div>
-        <label for="city">City:</label>
-        <input type="text" id="city" name="city">
+    <div class="container">
+        <h1>Student Filter</h1>
+        
+        <div class="filter-group">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" placeholder="Enter city">
 
-        <label for="gender">Gender:</label>
-        <select id="gender" name="gender">
-            <option value="">--Select--</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select>
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="">--Select--</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
 
-        <button onclick="applyFilters()">Apply Filters</button>
-    </div>
+            <button onclick="applyFilters()">Apply Filters</button>
+        </div>
 
-    <h2>Filtered Students:</h2>
-    <div id="results">
-        <!-- Filtered students will appear here -->
+        <div id="results">
+            <!-- Filtered students will appear here -->
+        </div>
     </div>
 </body>
 </html>
